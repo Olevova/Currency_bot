@@ -1,13 +1,18 @@
 import requests
 
+Key_C2 = {
+        "Гривня": "UAH",
+        "Рубль": "RUR",
+        "Долар":"USD",
+        "Евро":"EUR"
+        }
 tok = "2111825011:AAHC1bH2uLi1Pn1Mmc2WHLaIAjkvk5-3z6w" #токин бота
 url = "https://api.privatbank.ua/p24api/pubinfo?json&exchange&coursid=5" # адресс API ПриватБанка, оттуда бирем данные по валюте
 RULES = """Бот обмена валют DS2021Bot(DreamSweat).\n 1. Создан для отображения курсов валют Долара, Евро, Рубля
-на основе стоимости украинской гривне(values эта команда отображает валюты). Можна это сделать с помощью клавиши Курс Валют
-или ввода с клавиатуры
-Курс Валют.\n 2. Калькулятор валюты. Пользователь вводит через пробел сокращение валюты (USD -долар, EUR - евро ,
-RUR - рубль, UAH - гривня ) и сумму что надо перевести. Пример USD EUR 100 - переcчитает сколько евро стоит 100 доларов. 
-Также есть инлайн клавиатура, с зарание выщитанными значениями."""
+на основе стоимости украинской гривне(values эта команда отображает валюты). Можна это сделать с помощью клавиши Курс Валют.
+Или ввода с клавиатуры Курс Валют.\n 2. Калькулятор валюты. Пользователь вводит через пробел сокращение валюты (USD -долар, EUR - евро ,
+RUR - рубль, UAH - гривня ) и сумму что надо перевести. Пример USD EUR 100 - переcчитает сколько евро стоит 100 доларов.
+ВВод производим кратно единицы. Также есть инлайн клавиатура, с зарание выщитанными значениями."""
 
 #Классы исключений
 class CurrencyError(Exception):
@@ -31,7 +36,8 @@ class Currency():
 
     def __str__(self):
         if self.cur_in in Currency.Key_Chek and self.cur_out in Currency.Key_Chek and isinstance(self.value, int) or isinstance(self.value, float):
-            return f"Производится рассчет едениц {self.value} {self.cur_out} в {self.cur_in}, стоимость {self.answer:.2f} "
+            key_2 = {i: j for j, i in Key_C2.items()}
+            return f"Производится рассчет едениц {self.value} {key_2[self.cur_out]} в {key_2[self.cur_in]}, стоимость {self.answer:.2f} "
         else:
             raise CurrencyErrorExept
 
@@ -50,7 +56,7 @@ class Currency():
                 if self.cur_in in _["ccy"]:
                     sale2 = _["sale"]
         elif self.cur_in == "UAH":
-                sale = 1
+                sale2 = 1
         result = self.value*float(sale)/float(sale2)
         return result
 

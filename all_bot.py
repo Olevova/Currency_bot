@@ -2,16 +2,11 @@ import telebot
 import json
 import requests
 from telebot import types
-from extensions import*
+from extensions import *
 
 bot = telebot.TeleBot(tok)
 
-Key_C = {
-        "Гривня": "UAH",
-        "Рубль": "RUR",
-        "Долар":"USD",
-        "Евро":"EUR"
-        }
+
 # функция печати актуальных курсов валют
 def printValue(value, buy, sale):
     return "Курс " +'💰' + str(value) + ' покупка ' + str(buy[:5]) + " продажа " + str(sale[:5])
@@ -34,7 +29,7 @@ inline_menu.add(btnRUB, btnUAH, btnUSD, btnEURO)
 @bot.message_handler(commands=['start','help','values'])
 def bot_com(message):
     Currency ="Валюты для обработки :"
-    for i in Key_C.keys():
+    for i in Key_C2.keys():
         Currency = "\n".join((Currency,i))
     if message.text == '/start' or message.text == '/help':
         bot.reply_to(message, f'{RULES} {message.chat.first_name}', reply_markup=markup_menu )
@@ -48,7 +43,7 @@ def currensy_value(message):
         if message.text == "Курс Валют":
             res = requests.get(url).json()
             for values in res:
-                for n, a in Key_C.items():
+                for n, a in Key_C2.items():
                     if a == values['ccy']:
                         name = n
                         bot.send_message(message.chat.id, printValue(name, values['buy'], values['sale']))
